@@ -44,4 +44,11 @@ public interface PecaDao {
 	 * @param list
 	 */
 	void insertDefeitos(List<Defeito> list, Integer idPeca);
+	
+	/**
+	 * Faz um SELECT personalizado da tabela PECA_DEFEITOS
+	 * retornando todos os registros já com as tabelas necessárias populadas.
+	 * @return
+	 */
+	Peca selectAllDefeitosByPeca(Integer idPeca);
 }

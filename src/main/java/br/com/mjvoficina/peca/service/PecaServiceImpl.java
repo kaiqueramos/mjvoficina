@@ -23,8 +23,7 @@ public class PecaServiceImpl implements PecaService {
 
 	@Override
 	public Peca getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		return pecaDao.getById(id);
 	}
 
 	@Override
@@ -34,8 +33,7 @@ public class PecaServiceImpl implements PecaService {
 
 	@Override
 	public Peca getOneByName(String name) {
-		// TODO Auto-generated method stub
-		return null;
+		return pecaDao.getOneByName(name);
 	}
 
 	@Override
@@ -47,6 +45,11 @@ public class PecaServiceImpl implements PecaService {
 	@Override
 	public void insertDefeitos(List<Defeito> list, Integer idPeca) {
 		pecaDao.insertDefeitos(list, idPeca);
+	}
+
+	@Override
+	public Peca selectAllDefeitosByPeca(Integer idPeca) {
+		return pecaDao.selectAllDefeitosByPeca(idPeca);
 	}
 
 }

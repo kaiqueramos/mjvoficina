@@ -11,7 +11,6 @@ CREATE TABLE IF NOT EXISTS PECAS(
 CREATE TABLE IF NOT EXISTS VEICULOS(
 	idVeiculo INT AUTO_INCREMENT PRIMARY KEY,
 	tipoVeiculo VARCHAR(45) NOT NULL,
-	nomeVeiculo VARCHAR(45) NOT NULL UNIQUE,
 	data TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -23,12 +22,14 @@ CREATE TABLE IF NOT EXISTS PECA_DEFEITOS(
 	FOREIGN KEY (fkIdPeca) REFERENCES PECAS(idPeca)
 );
 
-CREATE TABLE IF NOT EXISTS VEICULO_PECAS(
-	fkIdPeca INT NOT NULL,
+CREATE TABLE IF NOT EXISTS VEICULO_PECAS_DEFEITOS(
 	fkIdVeiculo INT NOT NULL,
+	fkIdPeca INT NOT NULL,
+	fkIdDefeito INT NOT NULL,
 	data TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+	FOREIGN KEY (fkIdVeiculo) REFERENCES VEICULOS(idVeiculo),
 	FOREIGN KEY (fkIdPeca) REFERENCES PECAS(idPeca),
-	FOREIGN KEY (fkIdVeiculo) REFERENCES VEICULOS(idVeiculo)
+	FOREIGN KEY (fkIdDefeito) REFERENCES DEFEITOS(idDefeito)
 );
 
 INSERT INTO DEFEITOS (nomeDefeito) VALUES
@@ -49,16 +50,13 @@ INSERT INTO PECAS (nomePeca) VALUES
 ('Casco'),
 ('Painel');
 
-INSERT INTO VEICULOS (tipoVeiculo, nomeVeiculo) VALUES
-('Carro', 'Fusca'),
-('Carro', 'Corolla'),
-('Moto', 'Harley Davidson'),
-('Moto', 'Suzuki'),
-('Barco', 'Argos'),
-('Barco', 'Mariner'),
-('Navio', 'Costa Cruzeiros'),
-('Helicóptero', 'Eurocopter'),
-('Avião', 'Boeing 787');
+INSERT INTO VEICULOS (tipoVeiculo) VALUES
+('CARRO'),
+('MOTO'),
+('BARCO'),
+('NAVIO'),
+('HELICOPTERO'),
+('AVIÃO');
 
 INSERT INTO PECA_DEFEITOS(fkIdPeca, fkIdDefeito) VALUES
 (1, 4),
@@ -69,11 +67,17 @@ INSERT INTO PECA_DEFEITOS(fkIdPeca, fkIdDefeito) VALUES
 (3, 3),
 (4, 1);
 
-INSERT INTO VEICULO_PECAS(fkIdVeiculo, fkIdPeca) VALUES
-(1, 1),
-(1, 2),
-(1, 3),
-(1, 4),
-(1, 5);
+INSERT INTO VEICULO_PECAS_DEFEITOS(fkIdVeiculo, fkIdPeca, fkIdDefeito) VALUES
+(1, 1, 1),
+(1, 1, 2),
+(1, 2, 2),
+(1, 3, 3),
+(1, 4, 4),
+(1, 5, 5),
+(2, 1, 1),
+(2, 2, 2),
+(2, 3, 1),
+(2, 4, 1),
+(2, 5, 1);
 
 

@@ -13,8 +13,7 @@ public class VeiculoRowMapper implements RowMapper<Veiculo> {
 	@Override
 	public Veiculo mapRow(ResultSet rs, int rowNum) throws SQLException {
 		Veiculo veiculo = new Veiculo();
-		veiculo.setNomeVeiculo(rs.getString("nomeVeiculo"));
-		veiculo.setTipoVeiculo(TipoVeiculo.CARRO);
+		veiculo.setTipoVeiculo(TipoVeiculo.valueOf(rs.getString("tipoVeiculo")));
 		veiculo.setIdVeiculo(rs.getInt("idVeiculo"));
 		return veiculo;
 	}

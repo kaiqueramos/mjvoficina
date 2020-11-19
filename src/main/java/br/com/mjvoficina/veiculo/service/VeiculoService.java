@@ -1,4 +1,4 @@
-package br.com.mjvoficina.veiculo.dao;
+package br.com.mjvoficina.veiculo.service;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.peca.model.Peca;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
-public interface VeiculoDao {
+public interface VeiculoService {
 	
 	/**
 	 * Retorna uma lista de peças
@@ -42,7 +42,7 @@ public interface VeiculoDao {
 	Integer save(Veiculo Veiculo);
 	
 	/**
-	 * Insere uma lista de peças na tabela VEICULO_PECAS
+	 * Insere uma lista de peças na tabela Veiculo_DEFEITOS
 	 * @param list
 	 */
 	void insertPecas(List<Peca> list, Integer idVeiculo);
@@ -54,4 +54,5 @@ public interface VeiculoDao {
 	 * @param name
 	 */
 	List<Peca> selectAllPecasByVeiculo(String name);
+
 }

@@ -22,8 +22,8 @@ public class DefeitoServiceImpl implements DefeitoService {
 
 	@Override
 	public Defeito getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return defeitoDao.getById(id);
 	}
 
 	@Override

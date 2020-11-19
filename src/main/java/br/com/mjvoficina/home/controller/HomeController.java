@@ -25,17 +25,25 @@ import br.com.mjvoficina.defeito.service.DefeitoService;
 import br.com.mjvoficina.peca.dao.PecaDao;
 import br.com.mjvoficina.peca.model.Peca;
 import br.com.mjvoficina.peca.service.PecaService;
+import br.com.mjvoficina.veiculo.enums.TipoVeiculo;
 import br.com.mjvoficina.veiculo.model.Veiculo;
+import br.com.mjvoficina.veiculo.service.VeiculoService;
 
 @Controller
 @RequestMapping("/")
 public class HomeController {
 	 
 	@Autowired
+	private PecaDao teste;
+	
+	@Autowired
 	private DefeitoService defeitoService;
 	
 	@Autowired
 	private PecaService pecaService;
+	
+	@Autowired
+	private VeiculoService veiculoService;
 	
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 	
@@ -43,12 +51,7 @@ public class HomeController {
 	public String home() {
 		return "home";
 	}
-	
-	@GetMapping("registrodefeitos")
-	public String getRegistroDefeitos() {
-		return "registrodefeitos";
-	}
-	
+		
 	@PostMapping("registrodefeitos/registrar")
 	public String postRegistroDefeitos() {
 		return "telasucesso";
@@ -59,9 +62,34 @@ public class HomeController {
 		return "exibirregistros";
 	}
 	
-	@GetMapping("registrosdefeitos/exibir")
-	public String getExibirRegistros() {
-		return "exibirregistros";
+	@RequestMapping(value="registrodefeitos/getdefeitospecas", method=RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody 
+	public ResponseEntity<Object> getDefeitosPecasByVeiculo(@RequestParam(required = false) String name) {
+		LOGGER.info("Inicio getDefeitosPecasByVeiculo");
+		
+		List<Peca> list = veiculoService.selectAllPecasByVeiculo(name);
+		
+		if(StringUtils.isEmpty(name)) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<Object>(list, HttpStatus.OK);
+		
+		/*if(list.isEmpty()) {
+			LOGGER.info("Fim getDefeitosPecasByVeiculo");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			LOGGER.info("Fim getDefeitosPecasByVeiculo");
+			return new ResponseEntity<Object>(list, HttpStatus.OK);
+		}*/
+	}
+	
+	@GetMapping("registrodefeitos")
+	public String getExibirRegistros(Model model) {
+		List<TipoVeiculo> tipoVeiculos = Arrays.asList(TipoVeiculo.values());
+		System.out.println(tipoVeiculos);
+		model.addAttribute("veiculos", tipoVeiculos);		
+		return "registrodefeitos";
 	}
 	
 	@GetMapping("cadastrarveiculos")
@@ -74,12 +102,32 @@ public class HomeController {
 		
 		LOGGER.info("Fim getCadastroVeiculos");
 		return "cadastroveiculos";
+	}	
+	
+	@RequestMapping(value="cadastrarveiculos/getveiculo", method=RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody 
+	public ResponseEntity<Object> getVeiculo(@RequestParam(required = false) String name) {
+		LOGGER.info("Inicio getVeiculo");
+		
+		List<Veiculo> list = veiculoService.getByName(name);
+		
+		if(StringUtils.isEmpty(name)) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		  
+		if(list.isEmpty()) {
+			LOGGER.info("Fim getVeiculo");
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}else {
+			LOGGER.info("Fim getVeiculo");
+			return new ResponseEntity<Object>(list, HttpStatus.OK);
+		}
 	}
 	
 	@PostMapping("cadastrarveiculos/cadastrar")
 	public String postCadastroVeiculos(@RequestParam("peca") String[] pecas,
-									@RequestParam("nomeVeiculo") String nomeVeiculo,
-									Model model) {
+										@RequestParam("nomeVeiculo") String nomeVeiculo,
+										Model model) {
 		
 		LOGGER.info("Inicio postCadastroVeiculo");
 		
@@ -91,14 +139,14 @@ public class HomeController {
 		List<Peca> listPecas = new ArrayList<>();
 		Veiculo veiculo = new Veiculo();
 		veiculo.setNomeVeiculo(nomeVeiculo);
-		//Integer idPeca = pecaService.save(peca);
+		Integer idVeiculo = veiculoService.save(veiculo);
 		
 		for(String i : list) {
 			Peca p = pecaService.getOneByName(i);
 			listPecas.add(p);
 		}
 		
-		//pecaService.insertDefeitos(listDefeitos, idPeca);
+		veiculoService.insertPecas(listPecas, idVeiculo);
 		
 		model.addAttribute("link", "/cadastrarveiculos");
 		model.addAttribute("titulo", "Veiculo cadastrado com sucesso!");

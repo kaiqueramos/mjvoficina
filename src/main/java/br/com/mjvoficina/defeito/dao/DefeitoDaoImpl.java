@@ -47,8 +47,11 @@ public class DefeitoDaoImpl implements DefeitoDao {
 
 	@Override
 	public Defeito getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM DEFEITOS WHERE IDDEFEITO = :idDefeito";
+		MapSqlParameterSource param = new MapSqlParameterSource()
+				.addValue("idDefeito", id);
+		Defeito defeito = template.queryForObject(sql, param, new DefeitoRowMapper());
+		return defeito;
 	}
 
 	@Override
