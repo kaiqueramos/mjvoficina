@@ -21,6 +21,8 @@ import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.defeito.service.DefeitoService;
 import br.com.mjvoficina.peca.model.Peca;
 import br.com.mjvoficina.peca.service.PecaService;
+import br.com.mjvoficina.registro.dao.RegistroRowMapper;
+import br.com.mjvoficina.registro.model.Registro;
 import br.com.mjvoficina.veiculo.enums.TipoVeiculo;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
@@ -58,8 +60,10 @@ public class VeiculoDaoImpl implements VeiculoDao {
 
 	@Override
 	public Veiculo getById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+		String sql = "SELECT * FROM VEICULOS WHERE idVeiculo = :idVeiculo";
+		MapSqlParameterSource param = new MapSqlParameterSource()
+				.addValue("idVeiculo", id);
+		return template.queryForObject(sql, param, new VeiculoRowMapper());
 	}
 
 	@Override
@@ -84,11 +88,15 @@ public class VeiculoDaoImpl implements VeiculoDao {
 
 	@Override
 	public Veiculo getOneByName(String name) {
-		String sql = "SELECT * FROM VEICULOS WHERE tipoVeiculo = :tipoVeiculo";
-		MapSqlParameterSource param = new MapSqlParameterSource()
-				.addValue("tipoVeiculo", name);
-		Veiculo veiculo = template.queryForObject(sql, param, new VeiculoRowMapper());
-		return veiculo;
+		try {
+			String sql = "SELECT * FROM VEICULOS WHERE tipoVeiculo = :tipoVeiculo";
+			MapSqlParameterSource param = new MapSqlParameterSource()
+					.addValue("tipoVeiculo", name);
+			Veiculo veiculo = template.queryForObject(sql, param, new VeiculoRowMapper());
+			return veiculo;
+		}catch(EmptyResultDataAccessException e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -130,8 +138,13 @@ public class VeiculoDaoImpl implements VeiculoDao {
 	}
 
 	@Override
-	public List<Peca> selectAllPecasByVeiculo(String name) {
-		String sql = "SELECT vpd.DATA, v.IDVEICULO, v.TIPOVEICULO, p.IDPECA, p.NOMEPECA, d.IDDEFEITO, d.NOMEDEFEITO FROM VEICULO_PECAS_DEFEITOS vpd, VEICULOS v, PECAS p, DEFEITOS d WHERE fkIdVeiculo = idVeiculo AND fkIdPeca = idPeca AND fkIdDefeito = idDefeito AND fkIdVeiculo = :idVeiculo";
-		
+	public List<Registro> selectAllPecasByVeiculo(String name) {
+		Veiculo veiculo = getOneByName(name);
+		System.out.println(veiculo.getIdVeiculo());
+		String sql = "SELECT * FROM VEICULO_PECAS_DEFEITOS WHERE fkIdVeiculo = :fkIdVeiculo";
+		MapSqlParameterSource param = new MapSqlParameterSource()
+				.addValue("fkIdVeiculo", veiculo.getIdVeiculo());
+		List<Registro> list = template.query(sql, param, new RegistroRowMapper());
+		return list;
 	}
 }

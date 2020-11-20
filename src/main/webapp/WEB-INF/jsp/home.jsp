@@ -21,7 +21,7 @@
 					<a href="/cadastrardefeitos" id="cadastrarDefeitos" class="col-5 btn btn-primary ml-3 pt-4 font-weight-bold" style="height: 100px; border-color:#702094; background: #702094; border-radius: 15px;">Cadastrar defeitos</a>
 				</div>
 				<div class="row justify-content-center mt-4">
-					<a href="/registrosdefeitos/exibir" id="exibirRegistros" class="col-10 btn btn-primary pt-4 font-weight-bold" style="height: 100px; border-color:#702094; background: #702094; border-radius: 15px;">Exibir registros salvos</a>
+					<a href="/registrodefeitos/exibir" id="exibirRegistros" class="col-10 btn btn-primary pt-4 font-weight-bold" style="height: 100px; border-color:#702094; background: #702094; border-radius: 15px;">Exibir registros salvos</a>
 				</div> 
  			</div>
 		</div> 

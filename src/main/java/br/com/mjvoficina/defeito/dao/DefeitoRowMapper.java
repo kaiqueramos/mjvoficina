@@ -10,9 +10,6 @@ import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.defeito.service.DefeitoService;
 
 public class DefeitoRowMapper implements RowMapper<Defeito> {
-
-	@Autowired
-	private DefeitoService defeitoService;
 	
 	@Override
 	public Defeito mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -20,15 +17,5 @@ public class DefeitoRowMapper implements RowMapper<Defeito> {
 		defeito.setNomeDefeito(rs.getString("nomeDefeito"));
 		defeito.setIdDefeito(rs.getInt("idDefeito"));
 		return defeito;
-	}
-	
-	public class DefeitoFkIdRowMapper implements RowMapper<Defeito>{
-
-		@Override
-		public Defeito mapRow(ResultSet rs, int rowNum) throws SQLException {
-			Defeito defeito = defeitoService.getById(rs.getInt("fkIdDefeito"));
-			return defeito;
-		}
-		
 	}
 }

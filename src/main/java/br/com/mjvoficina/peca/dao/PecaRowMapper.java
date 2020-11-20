@@ -28,12 +28,4 @@ public class PecaRowMapper implements RowMapper<Peca> {
 		peca.setIdPeca(rs.getInt("idPeca"));
 		return peca;
 	}
-	
-	public class PecaFkIdRowMapper implements RowMapper<Peca>{
-
-		@Override
-		public Peca mapRow(ResultSet rs, int rowNum) throws SQLException {
-			
-		}
-	}
 }

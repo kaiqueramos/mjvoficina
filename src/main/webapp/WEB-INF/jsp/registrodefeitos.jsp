@@ -45,17 +45,8 @@
 				        	<th>PEÇA</th>
 				    	</tr>
 				  	</thead>
-				  	<tbody>
-					    <tr>
-					    	<td>
-				              <div class="custom-control">
-				                  <input type="checkbox" class="custom-control-input" id="1">
-				                  <label class="custom-control-label" for="1"></label>
-				              </div>
-				            </td>
-					    	<td>DEFEITO</td>
-					    	<td>DEFEITO</td>
-					    </tr>
+				  	<tbody id="tabela">
+					   
 					</tbody>
 				</table>
 				
@@ -64,7 +55,7 @@
 					<button id="btn-submit" class="btn btn-secondary ml-auto mr-5 rounded-pill " style="width: 150px; background-color: #7B0B9A">Salvar</button>
 				</div>   
 			</form>
-		</div> 
+		</div>
 		 
 		<script src="webjars/material-design-lite/1.3.0/material.min.js"></script> 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

@@ -1,10 +1,9 @@
 package br.com.mjvoficina.veiculo.dao;
 
 import java.util.List;
-import java.util.Map;
 
-import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.peca.model.Peca;
+import br.com.mjvoficina.registro.model.Registro;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
 public interface VeiculoDao {
@@ -53,5 +52,5 @@ public interface VeiculoDao {
 	 * pode ter.
 	 * @param name
 	 */
-	List<Peca> selectAllPecasByVeiculo(String name);
+	List<Registro> selectAllPecasByVeiculo(String name);
 }

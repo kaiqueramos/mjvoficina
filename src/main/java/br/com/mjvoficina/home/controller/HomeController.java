@@ -1,7 +1,10 @@
 package br.com.mjvoficina.home.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -22,9 +25,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.defeito.service.DefeitoService;
-import br.com.mjvoficina.peca.dao.PecaDao;
 import br.com.mjvoficina.peca.model.Peca;
 import br.com.mjvoficina.peca.service.PecaService;
+import br.com.mjvoficina.registro.model.MappedRegistro;
+import br.com.mjvoficina.registro.model.Registro;
+import br.com.mjvoficina.registro.service.RegistroService;
 import br.com.mjvoficina.veiculo.enums.TipoVeiculo;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 import br.com.mjvoficina.veiculo.service.VeiculoService;
@@ -32,9 +37,6 @@ import br.com.mjvoficina.veiculo.service.VeiculoService;
 @Controller
 @RequestMapping("/")
 public class HomeController {
-	 
-	@Autowired
-	private PecaDao teste;
 	
 	@Autowired
 	private DefeitoService defeitoService;
@@ -45,49 +47,83 @@ public class HomeController {
 	@Autowired
 	private VeiculoService veiculoService;
 	
+	@Autowired
+	private RegistroService registroService;
+	
 	private final Logger LOGGER = LoggerFactory.getLogger(HomeController.class);
 	
 	@GetMapping
 	public String home() {
 		return "home";
 	}
+	
+	@GetMapping("registrodefeitos/exibir")
+	public String exibirRegistros(Model model) {
+		List<Veiculo> list = veiculoService.getAll();
+		model.addAttribute("veiculos", list);
+		return "exibirregistros";
+	}
+	
+	@RequestMapping(value="registrodefeitos/exibir/get", method=RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
+	@ResponseBody 
+	public ResponseEntity<Object> getAllRegistros(@RequestParam(required = false) String name,
+												  @RequestParam(required = false) String dataInicio,
+												  @RequestParam(required = false) String dataFim) {
+		LOGGER.info("Inicio getAllRegistros");
+		 
 		
-	@PostMapping("registrodefeitos/registrar")
-	public String postRegistroDefeitos() {
-		return "telasucesso";
+		System.out.println(dataFim);
+		Date dtInicio = null;
+		Date dtFim = null;
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy ss:mm:hh");
+		
+		try {
+			if(!StringUtils.isEmpty(dataInicio)) {
+				dtInicio = sdf.parse(dataInicio + " 00:00:00");
+				System.out.println(dtInicio);
+			}
+			
+			if(!StringUtils.isEmpty(dataFim)) {
+				dtFim = sdf.parse(dataFim + " 23:59:59");
+				System.out.println(dtFim);
+			}
+		}catch(ParseException e) {
+			LOGGER.error("A data foi informada fora do padrão.");
+		}
+ 
+		List<MappedRegistro> list = registroService.getAllRegistros(name, dtInicio, dtFim);
+		return new ResponseEntity<Object>(list, HttpStatus.OK);
 	}
 	
 	@PostMapping("registrodefeitos/salvarregistro")
-	public String postSalvarRegistro() {
-		return "exibirregistros";
+	public String postSalvarRegistro(@RequestParam(required = false) Integer[] registros, Model model) {
+		for(Integer i : registros) {
+			Registro registro = registroService.getById(i);
+			registroService.save(registro);
+		}
+		model.addAttribute("link", "/registrodefeitos");
+		model.addAttribute("titulo", "Registro salvo com sucesso!");
+		return "telasucesso";
 	}
 	
 	@RequestMapping(value="registrodefeitos/getdefeitospecas", method=RequestMethod.GET, consumes = MediaType.APPLICATION_JSON_VALUE)
 	@ResponseBody 
 	public ResponseEntity<Object> getDefeitosPecasByVeiculo(@RequestParam(required = false) String name) {
 		LOGGER.info("Inicio getDefeitosPecasByVeiculo");
-		
-		List<Peca> list = veiculoService.selectAllPecasByVeiculo(name);
-		
+
 		if(StringUtils.isEmpty(name)) {
 			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 		
-		return new ResponseEntity<Object>(list, HttpStatus.OK);
+		List<MappedRegistro> list = veiculoService.selectAllPecasByVeiculo(name);
 		
-		/*if(list.isEmpty()) {
-			LOGGER.info("Fim getDefeitosPecasByVeiculo");
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}else {
-			LOGGER.info("Fim getDefeitosPecasByVeiculo");
-			return new ResponseEntity<Object>(list, HttpStatus.OK);
-		}*/
+		return new ResponseEntity<Object>(list, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("registrodefeitos")
 	public String getExibirRegistros(Model model) {
 		List<TipoVeiculo> tipoVeiculos = Arrays.asList(TipoVeiculo.values());
-		System.out.println(tipoVeiculos);
+		System.out.println(tipoVeiculos); 
 		model.addAttribute("veiculos", tipoVeiculos);		
 		return "registrodefeitos";
 	}

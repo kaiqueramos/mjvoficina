@@ -1,6 +1,7 @@
-package br.com.mjvoficina.veiculo.service;
+package br.com.mjvoficina.registro.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,14 +11,18 @@ import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.defeito.service.DefeitoService;
 import br.com.mjvoficina.peca.model.Peca;
 import br.com.mjvoficina.peca.service.PecaService;
+import br.com.mjvoficina.registro.dao.RegistroDao;
 import br.com.mjvoficina.registro.model.MappedRegistro;
 import br.com.mjvoficina.registro.model.Registro;
-import br.com.mjvoficina.veiculo.dao.VeiculoDao;
 import br.com.mjvoficina.veiculo.model.Veiculo;
+import br.com.mjvoficina.veiculo.service.VeiculoService;
 
 @Service
-public class VeiculoServiceImpl implements VeiculoService {
+public class RegistroServiceImpl implements RegistroService {
 
+	@Autowired
+	private RegistroDao registroDao;
+	
 	@Autowired
 	private DefeitoService defeitoService;
 	
@@ -25,48 +30,27 @@ public class VeiculoServiceImpl implements VeiculoService {
 	private PecaService pecaService;
 	
 	@Autowired
-	private VeiculoDao veiculoDao;
+	private VeiculoService veiculoService;
 	
 	@Override
-	public List<Veiculo> getAll() {
-		return veiculoDao.getAll();
+	public Registro getById(Integer id) {
+		return registroDao.getById(id);
 	}
 
 	@Override
-	public Veiculo getById(Integer id) {
-		return veiculoDao.getById(id);
+	public void save(Registro registro) {
+		registroDao.save(registro);
 	}
 
 	@Override
-	public List<Veiculo> getByName(String name) {
-		return veiculoDao.getByName(name);
-	}
-
-	@Override
-	public Veiculo getOneByName(String name) {
-		return veiculoDao.getOneByName(name);
-	}
-
-	@Override
-	public Integer save(Veiculo Veiculo) {
-		Integer key = veiculoDao.save(Veiculo);
-		return key;
-	}
-
-	@Override
-	public void insertPecas(List<Peca> list, Integer idVeiculo) {
-		veiculoDao.insertPecas(list, idVeiculo);
-	}
-
-	@Override
-	public List<MappedRegistro> selectAllPecasByVeiculo(String name) {
+	public List<MappedRegistro> getAllRegistros(String name, Date dtInicio, Date dtFim) {
+		List<Registro> registros = registroDao.getAllRegistros(name, dtInicio, dtFim);
 		List<MappedRegistro> registrosMapeados = new ArrayList<>();
-		List<Registro> registros = veiculoDao.selectAllPecasByVeiculo(name);
 		
 		for(Registro r : registros) {
 			Defeito d = defeitoService.getById(r.getIdDefeito());
 			Peca p = pecaService.getById(r.getIdPeca());
-			Veiculo v = getById(r.getIdVeiculo());
+			Veiculo v = veiculoService.getById(r.getIdVeiculo());
 			MappedRegistro mr = new MappedRegistro();
 			mr.setDefeito(d);
 			mr.setPeca(p);
@@ -77,5 +61,4 @@ public class VeiculoServiceImpl implements VeiculoService {
 		}
 		return registrosMapeados;
 	}
-
 }
