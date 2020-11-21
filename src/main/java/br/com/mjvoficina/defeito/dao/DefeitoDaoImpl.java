@@ -9,14 +9,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.mjvoficina.defeito.model.Defeito;
 
+/**
+ * Classe DAO referente a entidade DEFEITO
+ * @author kaique
+ *
+ */
 @Repository
 public class DefeitoDaoImpl implements DefeitoDao {
 
@@ -29,6 +34,7 @@ public class DefeitoDaoImpl implements DefeitoDao {
 	private final Logger LOGGER = LoggerFactory.getLogger(DefeitoDaoImpl.class);
 	
 	@Override
+	@Transactional
 	public List<Defeito> getAll() {
 		String sql = "SELECT * FROM DEFEITOS";
 		List<Defeito> list = new ArrayList<>();
@@ -46,23 +52,27 @@ public class DefeitoDaoImpl implements DefeitoDao {
 	}
 
 	@Override
+	@Transactional
 	public Defeito getById(Integer id) {
+		LOGGER.info("Inicio getById");
 		String sql = "SELECT * FROM DEFEITOS WHERE IDDEFEITO = :idDefeito";
 		MapSqlParameterSource param = new MapSqlParameterSource()
 				.addValue("idDefeito", id);
 		Defeito defeito = template.queryForObject(sql, param, new DefeitoRowMapper());
+		LOGGER.info("Fim getById");
 		return defeito;
 	}
 
 	@Override
+	@Transactional
 	public List<Defeito> getByName(String name) {
-		String sql = "SELECT * FROM DEFEITOS WHERE nomeDefeito like :nomeDefeito";
+		String sql = "SELECT * FROM DEFEITOS WHERE nomeDefeito = :nomeDefeito";
 		List<Defeito> list = new ArrayList<>();
 		try {
 			LOGGER.info("Inicio getByName");
 
 			MapSqlParameterSource params = new MapSqlParameterSource()
-					.addValue("nomeDefeito", "%" + name + "%");
+					.addValue("nomeDefeito", name);
 			list.addAll(template.query(sql, params, new DefeitoRowMapper()));
 			
 			LOGGER.info("Fim getByName");
@@ -74,6 +84,7 @@ public class DefeitoDaoImpl implements DefeitoDao {
 	}
 
 	@Override
+	@Transactional
 	public void save(Defeito defeito) {
 		LOGGER.info("Inicio save");
 		
@@ -88,13 +99,14 @@ public class DefeitoDaoImpl implements DefeitoDao {
 	}
 
 	@Override
+	@Transactional
 	public Defeito getOneByName(String name) {
 		String sql = "SELECT * FROM DEFEITOS WHERE nomeDefeito like :nomeDefeito";
 		try {
 			LOGGER.info("Inicio getOneByName");
 
 			MapSqlParameterSource params = new MapSqlParameterSource()
-					.addValue("nomeDefeito", "%" + name + "%");
+					.addValue("nomeDefeito", name);
 			Defeito defeito = template.queryForObject(sql, params, new DefeitoRowMapper());
 			
 			LOGGER.info("Fim getOneByName");
@@ -104,5 +116,4 @@ public class DefeitoDaoImpl implements DefeitoDao {
 			return null;
 		}
 	}
-
 }

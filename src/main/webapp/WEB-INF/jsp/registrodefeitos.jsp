@@ -15,27 +15,34 @@
 		<div class="d-flex mx-auto col-12 col-md-8 card bg-white shadow" style="margin-top: 3%; height: 600px; border-radius: 15px;">
  			<h3 class="font-weight-bold ml-2 mt-4">Registrar defeitos veiculares</h3>
  			<form class="" action="/registrodefeitos/salvarregistro" method="post">
- 			
-				<label class="mdc-text-field mdc-text-field--outlined mt-3 ml-2" style="height: 50px; width: 60%">
-				  <span class="mdc-notched-outline">
-				    <span class="mdc-notched-outline__leading"></span>
-				    <span class="mdc-notched-outline__notch">
-				      <span class="mdc-floating-label" id="my-label-id">Nome do cliente</span>
-				    </span>
-				    <span class="mdc-notched-outline__trailing"></span>
-				  </span>
-				  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id">
-				</label>
-				
-				 <div class="form-group ml-2">
-				    <label for="veiculos">Tipo de veículo:</label> 
-				    <select class="form-control" id="veiculos" style="height: 50px; width: 40%">
-				      <option value="">Selecione o veículo</option>
-				      <c:forEach items="${veiculos}" var="veiculo">
-					      <option value="${ veiculo }">${ veiculo }</option>
-				      </c:forEach>
-				    </select>
-				  </div> 
+ 				<div class="d-flex">
+ 					<div class="col-8">
+						<label class="mdc-text-field mdc-text-field--outlined mt-3 ml-2 row" style="height: 50px; width: 60%">
+						  <span class="mdc-notched-outline">
+						    <span class="mdc-notched-outline__leading"></span>
+						    <span class="mdc-notched-outline__notch">
+						      <span class="mdc-floating-label" id="my-label-id">Nome do cliente</span>
+						    </span>
+						    <span class="mdc-notched-outline__trailing"></span>
+						  </span>
+						  <input type="text" class="mdc-text-field__input" aria-labelledby="my-label-id">
+						</label>
+						
+						 <div class="form-group ml-2 w-100">
+						    <label for="veiculos">Tipo de veículo:</label> 
+						    <select name="name" class="form-control" id="veiculos" style="height: 50px; width: 60%">
+						      <option value="">Selecione o veículo</option>
+						      <c:forEach items="${veiculos}" var="veiculo">
+							      <option value="${ veiculo.tipoVeiculo }">${ veiculo.tipoVeiculo }</option>
+						      </c:forEach>
+						    </select>
+						  </div> 
+ 					  </div>
+					  <div class="col-6">
+						  <div id="data"></div>
+						  <div id="hora"></div>
+					  </div>
+ 				</div>
 				
 				<table class="table table-hover table-borderless ml-auto mr-auto mt-4 table-wrapper-scroll-y my-custom-scrollbar" style="width: 80%; background-color: #F0F0F0">
 					<thead>

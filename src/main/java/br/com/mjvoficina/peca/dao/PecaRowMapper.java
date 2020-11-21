@@ -2,24 +2,17 @@ package br.com.mjvoficina.peca.dao;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
 
-import br.com.mjvoficina.defeito.model.Defeito;
-import br.com.mjvoficina.defeito.service.DefeitoService;
 import br.com.mjvoficina.peca.model.Peca;
-import br.com.mjvoficina.peca.service.PecaService;
 
+/**
+ * Classe RowMapper referente a entidade PECA
+ * @author kaique
+ *
+ */
 public class PecaRowMapper implements RowMapper<Peca> {
-
-	@Autowired
-	private PecaService pecaService;
-	
-	@Autowired
-	private DefeitoService defeitoService;
 	
 	@Override
 	public Peca mapRow(ResultSet rs, int rowNum) throws SQLException {

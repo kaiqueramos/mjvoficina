@@ -45,7 +45,7 @@
 				    	</tr>
 				  	</thead>
 				  	<tbody id="tabela">
-					    <tr> 
+					    <tr>
 					    	<td>Cliente</td>
 					      	<td>DEFEITO</td>
 					    	<td>DEFEITO</td>

@@ -4,6 +4,11 @@ import java.util.List;
 
 import br.com.mjvoficina.defeito.model.Defeito;
 
+/**
+ * Interface referente a entidade DEFEITO
+ * @author kaique
+ *
+ */
 public interface DefeitoDao {
 
 	/**

@@ -3,9 +3,15 @@ package br.com.mjvoficina.veiculo.dao;
 import java.util.List;
 
 import br.com.mjvoficina.peca.model.Peca;
-import br.com.mjvoficina.registro.model.Registro;
+import br.com.mjvoficina.possiveisDefeitosPecas.model.PossivelDefeitoPeca;
+import br.com.mjvoficina.possiveisPecasVeiculos.model.PossivelPecaVeiculo;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
+/**
+ * Interface DAO referente a entidade VEICULO
+ * @author kaique
+ *
+ */
 public interface VeiculoDao {
 	
 	/**
@@ -44,7 +50,7 @@ public interface VeiculoDao {
 	 * Insere uma lista de peças na tabela VEICULO_PECAS
 	 * @param list
 	 */
-	void insertPecas(List<Peca> list, Integer idVeiculo);
+	void insertPecas(List<PossivelDefeitoPeca> list, Integer idVeiculo);
 	
 	/**
 	 * Retorna uma lista de peças que um veículo pode conter
@@ -52,5 +58,6 @@ public interface VeiculoDao {
 	 * pode ter.
 	 * @param name
 	 */
-	List<Registro> selectAllPecasByVeiculo(String name);
+	List<PossivelPecaVeiculo> selectAllPecasByVeiculo(String name);
+	
 }

@@ -16,7 +16,7 @@ input.on("input", function () {
             $("#feedback").addClass("invalid-feedback");
             input.removeClass("is-valid");
             input.addClass("is-invalid");
-            $("#feedback").text("Você quer dizer " + response[0].nomeDefeito + "? Se sim, esse defeito já existe na base de dados!");
+            $("#feedback").text("Esse defeito já existe na base de dados!");
             $("#feedback").removeClass("valid-feedback");
         },
         error: function (jqXhr, textStatus, errorMessage) {

@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 import br.com.mjvoficina.peca.model.Peca;
-import br.com.mjvoficina.veiculo.enums.TipoVeiculo;
 
 /**
  * Classe referente a tabela VEICULO
@@ -14,28 +13,21 @@ import br.com.mjvoficina.veiculo.enums.TipoVeiculo;
  */
 public class Veiculo {
 	private Integer idVeiculo;
-	private String nomeVeiculo;
-	private TipoVeiculo tipoVeiculo;
+	private String tipoVeiculo;
 	private Date dataInclusao;
 	private List<Peca> pecas = new ArrayList<>();
 	
 	
-	public String getNomeVeiculo() {
-		return nomeVeiculo;
-	}
-	public void setNomeVeiculo(String nomeVeiculo) {
-		this.nomeVeiculo = nomeVeiculo;
-	}
 	public Integer getIdVeiculo() {
 		return idVeiculo;
 	}
 	public void setIdVeiculo(Integer idVeiculo) {
 		this.idVeiculo = idVeiculo;
 	}
-	public TipoVeiculo getTipoVeiculo() {
+	public String getTipoVeiculo() {
 		return tipoVeiculo;
 	}
-	public void setTipoVeiculo(TipoVeiculo tipoVeiculo) {
+	public void setTipoVeiculo(String tipoVeiculo) {
 		this.tipoVeiculo = tipoVeiculo;
 	}
 	public Date getDataInclusao() {

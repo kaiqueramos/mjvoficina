@@ -5,6 +5,11 @@ import java.util.List;
 import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.peca.model.Peca;
 
+/**
+ * Classe Service referente a entidade PECA
+ * @author kaique
+ *
+ */
 public interface PecaService {
 	
 	/**

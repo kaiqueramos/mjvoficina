@@ -6,6 +6,12 @@ import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.peca.model.Peca;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
+/**
+ * Classe para mapear um objeto registros com apenas IDs para um objeto com
+ * outros objetos aninhados, referentes aos IDs
+ * @author kaique
+ *
+ */
 public class MappedRegistro {
 	private Integer idRegistro;
 	private Veiculo veiculo;

@@ -5,6 +5,11 @@ import java.util.List;
 import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.peca.model.Peca;
 
+/**
+ * Interface DAO referente a entidade PECA
+ * @author kaique
+ *
+ */
 public interface PecaDao {
 	
 	/**

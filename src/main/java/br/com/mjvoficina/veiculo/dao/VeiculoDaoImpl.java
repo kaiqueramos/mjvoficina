@@ -1,7 +1,5 @@
 package br.com.mjvoficina.veiculo.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,32 +9,27 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import br.com.mjvoficina.defeito.model.Defeito;
-import br.com.mjvoficina.defeito.service.DefeitoService;
-import br.com.mjvoficina.peca.model.Peca;
-import br.com.mjvoficina.peca.service.PecaService;
-import br.com.mjvoficina.registro.dao.RegistroRowMapper;
-import br.com.mjvoficina.registro.model.Registro;
-import br.com.mjvoficina.veiculo.enums.TipoVeiculo;
+import br.com.mjvoficina.possiveisDefeitosPecas.model.PossivelDefeitoPeca;
+import br.com.mjvoficina.possiveisPecasVeiculos.model.PossiveisPecasVeiculoRowMapper;
+import br.com.mjvoficina.possiveisPecasVeiculos.model.PossivelPecaVeiculo;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
-@Repository
+/**
+ * Classe DAO referente a entidade Veiculo
+ * @author kaique
+ *
+ */
+@Repository	
 public class VeiculoDaoImpl implements VeiculoDao {
 
 	@Autowired
 	private NamedParameterJdbcTemplate template;
-	
-	@Autowired
-	private PecaService pecaService;
-	
-	@Autowired
-	private DefeitoService defeitoService;
 	
 	@Autowired
 	private DataSource dataSource;
@@ -44,6 +37,7 @@ public class VeiculoDaoImpl implements VeiculoDao {
 	private final Logger LOGGER = LoggerFactory.getLogger(VeiculoDaoImpl.class);
 	
 	@Override
+	@Transactional
 	public List<Veiculo> getAll() {
 		String sql = "SELECT * FROM VEICULOS";
 		List<Veiculo> list = new ArrayList<>();
@@ -59,58 +53,71 @@ public class VeiculoDaoImpl implements VeiculoDao {
 	}
 
 	@Override
+	@Transactional
 	public Veiculo getById(Integer id) {
-		String sql = "SELECT * FROM VEICULOS WHERE idVeiculo = :idVeiculo";
-		MapSqlParameterSource param = new MapSqlParameterSource()
-				.addValue("idVeiculo", id);
-		return template.queryForObject(sql, param, new VeiculoRowMapper());
+		try {
+			LOGGER.info("Inicio getById");
+			String sql = "SELECT * FROM VEICULOS WHERE idVeiculo = :idVeiculo";
+			MapSqlParameterSource param = new MapSqlParameterSource()
+					.addValue("idVeiculo", id);
+			LOGGER.info("Fim getById");
+			return template.queryForObject(sql, param, new VeiculoRowMapper());
+		}catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Erro: " + e.getMessage());
+			return null;
+		}
 	}
 
 	@Override
+	@Transactional
 	public List<Veiculo> getByName(String name) {
-		String sql = "SELECT * FROM VeiculoS WHERE tipoVeiculo like :tipoVeiculo";
+		String sql = "SELECT * FROM VEICULOS WHERE tipoVeiculo = :tipoVeiculo";
 		List<Veiculo> list = new ArrayList<>();
 		try {
 			LOGGER.info("Inicio getByName");
 
 			MapSqlParameterSource params = new MapSqlParameterSource()
-					.addValue("tipoVeiculo", "%" + name + "%");
+					.addValue("tipoVeiculo", name);
 			
 			list.addAll(template.query(sql, params, new VeiculoRowMapper()));
 			
 			LOGGER.info("Fim getByName");
 			return list;
 		}catch (EmptyResultDataAccessException e) {
-			LOGGER.error("Erro getByName: " + e.getMessage());
+			LOGGER.error("Erro: " + e.getMessage());
 			return null;
 		}
 	}
 
 	@Override
+	@Transactional
 	public Veiculo getOneByName(String name) {
 		try {
+			LOGGER.info("Inicio getOneByName");
 			String sql = "SELECT * FROM VEICULOS WHERE tipoVeiculo = :tipoVeiculo";
 			MapSqlParameterSource param = new MapSqlParameterSource()
 					.addValue("tipoVeiculo", name);
 			Veiculo veiculo = template.queryForObject(sql, param, new VeiculoRowMapper());
+			LOGGER.info("Fim getOneByName");
 			return veiculo;
 		}catch(EmptyResultDataAccessException e) {
+			LOGGER.error("Erro: " + e.getMessage());
 			return null;
 		}
 	}
 
 	@Override
-	public Integer save(Veiculo Veiculo) {
+	@Transactional
+	public Integer save(Veiculo veiculo) {
 		LOGGER.info("Inicio save");
 		
 		SimpleJdbcInsert insert = new SimpleJdbcInsert(dataSource)
 				.withTableName("VEICULOS")
-				.usingColumns("nomeVeiculo", "tipoVeiculo")
+				.usingColumns("tipoVeiculo")
 				.usingGeneratedKeyColumns("idVeiculo");
 		
 		MapSqlParameterSource params = new MapSqlParameterSource()
-				.addValue("nomeVeiculo", Veiculo.getNomeVeiculo())
-				.addValue("tipoVeiculo", TipoVeiculo.CARRO);
+				.addValue("tipoVeiculo", veiculo.getTipoVeiculo());
 		
 		Integer key = (Integer) insert.executeAndReturnKey(params);
 		
@@ -119,32 +126,43 @@ public class VeiculoDaoImpl implements VeiculoDao {
 	}
 
 	@Override
-	public void insertPecas(List<Peca> list, Integer idVeiculo) {
+	@Transactional
+	public void insertPecas(List<PossivelDefeitoPeca> list, Integer idVeiculo) {
 		LOGGER.info("Inicio insertPeca");
 		
 		SimpleJdbcInsert insert = new SimpleJdbcInsert(dataSource)
-				.withTableName("VEICULO_PECAS")
-				.usingColumns("fkIdPeca", "fkIdVeiculo");
+				.withTableName("POSSIVEIS_PECAS_VEICULO")
+				.usingColumns("fkIdPossivelDefeitoPeca", "fkIdVeiculo");
 		
 		
-		for(Peca p : list) {
+		for(PossivelDefeitoPeca p : list) {
 			MapSqlParameterSource param = new MapSqlParameterSource()
-					.addValue("fkIdPeca", p.getIdPeca())
+					.addValue("fkIdPossivelDefeitoPeca", p.getIdPossivelDefeitoPeca())
 					.addValue("fkIdVeiculo", idVeiculo);
 			insert.execute(param);
 		}
 		
 		LOGGER.info("Fim insertPeca");
+		
 	}
 
 	@Override
-	public List<Registro> selectAllPecasByVeiculo(String name) {
-		Veiculo veiculo = getOneByName(name);
-		System.out.println(veiculo.getIdVeiculo());
-		String sql = "SELECT * FROM VEICULO_PECAS_DEFEITOS WHERE fkIdVeiculo = :fkIdVeiculo";
-		MapSqlParameterSource param = new MapSqlParameterSource()
-				.addValue("fkIdVeiculo", veiculo.getIdVeiculo());
-		List<Registro> list = template.query(sql, param, new RegistroRowMapper());
-		return list;
+	@Transactional
+	public List<PossivelPecaVeiculo> selectAllPecasByVeiculo(String name) {
+		try {
+			LOGGER.info("Inicio selectAllPecasByVeiculo");
+			
+			Veiculo veiculo = getOneByName(name);
+			String sql = "SELECT * FROM POSSIVEIS_PECAS_VEICULO WHERE fkIdVeiculo = :fkIdVeiculo";
+			MapSqlParameterSource param = new MapSqlParameterSource()
+					.addValue("fkIdVeiculo", veiculo.getIdVeiculo());
+			List<PossivelPecaVeiculo> list = template.query(sql, param, new PossiveisPecasVeiculoRowMapper());
+			
+			LOGGER.info("Fim selectAllPecasByVeiculo");
+			return list;
+		}catch (EmptyResultDataAccessException e) {
+			LOGGER.error("Erro: " + e.getMessage());
+			return null;
+		}
 	}
 }

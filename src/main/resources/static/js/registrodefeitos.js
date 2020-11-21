@@ -1,3 +1,7 @@
+let checked = false;
+let btn = $("#btn-submit");
+let checkbox = $("[name='registros']");
+
 $("#veiculos").change(function () {
     $.ajax({
         type: "get",
@@ -11,19 +15,19 @@ $("#veiculos").change(function () {
                     `<tr>
                     <td>
                     <div class="custom-control">
-                        <input name="registros" value="${element.idRegistro}" type="checkbox" class="custom-control-input" id="${element.idRegistro}">
-                        <label class="custom-control-label" for="${element.idRegistro}"></label>
+                        <input name="registros" value="${element.idPossivelDefeitoPeca}" type="checkbox" class="custom-control-input" id="${element.idPossivelDefeitoPeca}">
+                        <label class="custom-control-label" for="${element.idPossivelDefeitoPeca}"></label>
                     </div>
                     </td>
-                    <td>${element.defeito.nomeDefeito}</td>
-                    <td>${element.peca.nomePeca}</td>
+                    <td>${element.defeito}</td>
+                    <td>${element.peca}</td>
                 </tr>`
                 );
-                console.log(element.peca.nomePeca);
+                console.log(element.peca);
             });
         },
         error: function (response) {
-            console.log("Não foi");
+            $("#tabela").html("");
         },
         complete: function (response) {
             console.log("Acabou");
@@ -31,3 +35,31 @@ $("#veiculos").change(function () {
     });
     console.log($("#veiculos option:selected").text());
 });
+
+$(document).ready(function () {
+    const now = new Date();
+
+    // Formata a data conforme dd/mm/aaaa hh:ii:ss
+    const data = "Acesso: " + zeroFill(now.getUTCDate()) + "/" + zeroFill(now.getMonth() + 1) + "/" + now.getFullYear();
+    const hora = "Horário: " + zeroFill(now.getHours()) + ":" + zeroFill(now.getMinutes()) + ":" + zeroFill(now.getSeconds());
+    // Exibe na tela usando a div#data-hora
+    document.getElementById("data").innerHTML = data;
+    document.getElementById("hora").innerHTML = hora;
+});
+
+const zeroFill = (n) => {
+    return ("0" + n).slice(-2);
+};
+
+// Cria intervalo
+const interval = setInterval(() => {
+    // Pega o horário atual
+    const now = new Date();
+
+    // Formata a data conforme dd/mm/aaaa hh:ii:ss
+    const data = "Acesso: " + zeroFill(now.getUTCDate()) + "/" + zeroFill(now.getMonth() + 1) + "/" + now.getFullYear();
+    const hora = "Horário: " + zeroFill(now.getHours()) + ":" + zeroFill(now.getMinutes()) + ":" + zeroFill(now.getSeconds());
+    // Exibe na tela usando a div#data-hora
+    document.getElementById("data").innerHTML = data;
+    document.getElementById("hora").innerHTML = hora;
+}, 1000);

@@ -9,6 +9,11 @@ import org.springframework.jdbc.core.RowMapper;
 import br.com.mjvoficina.defeito.model.Defeito;
 import br.com.mjvoficina.defeito.service.DefeitoService;
 
+/**
+ * RowMapper referente a entidade DEFEITO
+ * @author kaique
+ *
+ */
 public class DefeitoRowMapper implements RowMapper<Defeito> {
 	
 	@Override

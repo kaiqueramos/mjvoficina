@@ -52,7 +52,7 @@
 				
 				<div class="row mt-5" style="margin-top: 100px">
 					<a href="/" class="ml-5 font-weight-bold mt-1" style="color: #7B0B9A; font-size: 20px;"><img src="./images/Caminho.svg" class="mr-2" />Voltar ao menu</a>
-					<button id="btn-submit" class="btn btn-secondary ml-auto mr-5 rounded-pill " style="width: 150px; background-color: #7B0B9A">Salvar</button>
+					<button id="btn-submit" class="btn btn-secondary ml-auto mr-5 rounded-pill " style="width: 150px; background-color: #7B0B9A" disabled="disabled">Salvar</button>
 				</div>   
 			</form>
 		</div>

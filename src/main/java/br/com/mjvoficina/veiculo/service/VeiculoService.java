@@ -2,10 +2,14 @@ package br.com.mjvoficina.veiculo.service;
 
 import java.util.List;
 
-import br.com.mjvoficina.peca.model.Peca;
-import br.com.mjvoficina.registro.model.MappedRegistro;
+import br.com.mjvoficina.possiveisDefeitosPecas.model.PossivelDefeitoPeca;
 import br.com.mjvoficina.veiculo.model.Veiculo;
 
+/**
+ * Interface Service referente a entidade VEICULO
+ * @author kaique
+ *
+ */
 public interface VeiculoService {
 	
 	/**
@@ -44,14 +48,6 @@ public interface VeiculoService {
 	 * Insere uma lista de peças na tabela Veiculo_DEFEITOS
 	 * @param list
 	 */
-	void insertPecas(List<Peca> list, Integer idVeiculo);
+	void insertPecas(List<PossivelDefeitoPeca> list, Integer idVeiculo);
 	
-	/**
-	 * Retorna uma lista de peças que um veículo pode conter
-	 * e dentro das peças, um lista de defeitos que essa peça
-	 * pode ter.
-	 * @param name
-	 */
-	List<MappedRegistro> selectAllPecasByVeiculo(String name);
-
 }

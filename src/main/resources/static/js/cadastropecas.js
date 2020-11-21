@@ -18,7 +18,7 @@ function doAjax() {
             $("#feedback").addClass("invalid-feedback");
             input.removeClass("is-valid");
             input.addClass("is-invalid");
-            $("#feedback").text("Você quer dizer " + response[0].nomePeca + "? Se sim, essa peça já existe na base de dados!");
+            $("#feedback").text("Esa peça já existe na base de dados!");
             $("#feedback").removeClass("valid-feedback");
         },
         error: function (jqXhr, textStatus, errorMessage) {
@@ -58,11 +58,31 @@ function doAjax() {
 
 input.on("input", doAjax);
 
+checkbox.on("change", function () {
+    if (checkbox.is(":checked")) {
+        checked = true;
+        doAjax();
+    } else {
+        checked = false;
+        doAjax();
+    }
+});
+
 $(input).on("input", function () {
-    checked = false;
     for (let i = 0; i < checkbox.length; i++) {
         if (checkbox[i].checked) {
             checked = true;
         }
+    }
+});
+
+$("#checkAll").change(function () {
+    $("input:checkbox").prop("checked", $(this).prop("checked"));
+    if (checkbox.is(":checked")) {
+        checked = true;
+        doAjax();
+    } else {
+        checked = false;
+        doAjax();
     }
 });
